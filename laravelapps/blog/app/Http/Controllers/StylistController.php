@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App\Stylist;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades;
 
 class StylistController extends Controller{
 
@@ -31,20 +32,39 @@ class StylistController extends Controller{
 
     }
 
-    public function searchStylist(){
-        
-        
-        $stylist = Stylist::all()->where('firstName', 'Ruwanari')->get();
-       
+    public function searchStylist($firstname,$lastname){
+        $stylists = Stylist::where('firstName','LIKE','%'.$firstname.'%')
+        ->orWhere('lastName','LIKE','%'.$lastname.'%')->get();
+
+            if(count($stylists)>0){
+                $response = [
+                    'stylists'=>$stylists
+                ];
+                return response()->json($response,200);
+                                    }
+
+                                }
+                            }
+                              
 
         /*$stylist = Stylist::find($id);
         if(!$stylist){
             return response()->json(['messege'=>'No stylist'],404);
-        }*/
+        }
         return response()->json(['stylist' =>$stylist],200);
 
-    }
+    }*/
 
+
+
+/*$stylist = Stylist::where('firstName','LIKE','%'.$firstname.'%')->get();
+
+if(count($stylist)>0){
+    return response()->json(['stylist' =>$stylist],200);
 }
+*/
 
 ?>
+
+   
+   

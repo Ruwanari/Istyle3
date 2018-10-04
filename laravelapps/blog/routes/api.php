@@ -20,6 +20,6 @@ Route::post('/addStylist',[
     'uses' =>'StylistController@addStylist'
 ]);
 
-Route::get('/searchStylist',[
+Route::get('/searchStylist/{firstname}/{lastname}',[
     'uses' =>'StylistController@searchStylist'
 ]);
