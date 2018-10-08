@@ -23,3 +23,23 @@ Route::post('/addStylist',[
 Route::get('/searchStylist/{firstname}/{lastname}',[
     'uses' =>'StylistController@searchStylist'
 ]);
+
+Route::get('/searchStylist/{keyname}',[
+    'uses' =>'StylistController@searchStylist2'
+]);
+
+Route::get('/getSkills',[
+    'uses' =>'StylistController@getSkills'
+]);
+
+Route::get('/getJobTypes',[
+    'uses' =>'StylistController@getJobTypes'
+]);
+
+Route::get('/getLocations',[
+    'uses' =>'StylistController@getLocations'
+]);
+
+Route::post('/filter',[
+    'uses' =>'StylistController@filter'
+]);
