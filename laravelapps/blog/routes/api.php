@@ -28,6 +28,9 @@ Route::get('/searchStylist/{keyname}',[
     'uses' =>'StylistController@searchStylist2'
 ]);
 
+Route::get('/getRates',[
+    'uses' =>'StylistController@getRates'
+]);
 Route::get('/getSkills',[
     'uses' =>'StylistController@getSkills'
 ]);

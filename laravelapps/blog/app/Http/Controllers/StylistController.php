@@ -57,6 +57,16 @@ class StylistController extends Controller{
         return response()->json($response, 200);
     }
 
+    public function getRates()
+    {
+        $rates = \App\Stylist::distinct()->get(['RatePerHour']);
+        $response = [
+            'rates'=>$rates
+        ];
+
+        return response()->json($response, 200);
+    }
+
     public function getJobTypes()
     {
         $jobTypes = \App\JobType::all();
@@ -102,32 +112,59 @@ class StylistController extends Controller{
     }
 
     public function filter(Request $request, Stylist $stylist)
-
     {
-        $stylist =  \App\Stylist::with('skills','jobTypes')->newQuery();
-    
-        // Search for a user based on their name.
-        if ($request->has('Location')) {
-            $stylist->where('Location', $request->input('Location'));
+        $stylist =  \App\Stylist::
+        join('stylistskill', 'stylists.id', '=', 'stylistskill.stylist_id')
+        ->join('skill', 'stylistskill.skill_id', '=', 'skill.id')
+        ->join('stylistjobtype','stylists.id','=', 'stylistjobtype.stylist_id')
+        ->join('jobtype','stylistjobtype.job_type_id', '=', 'jobtype.id')
+        ->select('MIN(stylists.id) as id', 'stylists.FirstName', 'stylists.LastName','skill.Description','jobtype.JobDescription')
+        ->groupBy('stylists.id')
+        ->newQuery();
+        
+        $myArray = array();
+      
+        $stylist2=json_decode(json_encode($stylist),true);
+
+        
+
+        foreach($stylist2 as $item){
+            if(array_key_exists($item['id'],$myArray )){ 
+                $myArray[] = array($item['id'] => $stylist);
+            }
+        }
+            
+            
+        if ($request->has('location')) 
+        {
+            $stylist->where('Location', $request->input('location'));
         }
     
         // Search for a user based on their company.
-        if ($request->has('RatePerHour')) {
-            $stylist->where('RatePerHour','<=',$request->input('RatePerHour'));
+        if ($request->has('rate')) 
+        {
+            $stylist->where('RatePerHour','<=',$request->input('rate'));
         }
     
         // Search for a user based on their city.
-        if ($request->has('skill')) {
-            $stylist->where('skills->Description', $request->input('skill'));
-
-
+        if ($request->has('skill')) 
+        {
+            $stylist->where('Description',$request->input('skill'));
         }
-    
-        // Continue for all of the filters.
-    
+
+        if ($request->has('jobType')) 
+        {
+            $stylist->where('JobDescription',$request->input('jobType'));
+            
+        }
+        
+
+        // Search for a user based on their name.
+        
+
         // Get the results and return them.
         return $stylist->get();
-
+    
  
     
 }
