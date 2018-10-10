@@ -118,23 +118,11 @@ class StylistController extends Controller{
         ->join('skill', 'stylistskill.skill_id', '=', 'skill.id')
         ->join('stylistjobtype','stylists.id','=', 'stylistjobtype.stylist_id')
         ->join('jobtype','stylistjobtype.job_type_id', '=', 'jobtype.id')
-        ->select('MIN(stylists.id) as id', 'stylists.FirstName', 'stylists.LastName','skill.Description','jobtype.JobDescription')
+        ->select('stylists.*', 'skill.Description','jobtype.JobDescription')
         ->groupBy('stylists.id')
         ->newQuery();
-        
-        $myArray = array();
-      
-        $stylist2=json_decode(json_encode($stylist),true);
 
-        
-
-        foreach($stylist2 as $item){
-            if(array_key_exists($item['id'],$myArray )){ 
-                $myArray[] = array($item['id'] => $stylist);
-            }
-        }
-            
-            
+    
         if ($request->has('location')) 
         {
             $stylist->where('Location', $request->input('location'));
@@ -165,8 +153,17 @@ class StylistController extends Controller{
         // Get the results and return them.
         return $stylist->get();
     
- 
-    
+}
+
+
+public function viewProfile($id)
+{
+    $stylist = \App\Stylist::with('skills','jobTypes')->find($id); 
+    $response = [
+        'stylist'=>$stylist
+    ];
+
+    return response()->json($response, 200);
 }
 
 
