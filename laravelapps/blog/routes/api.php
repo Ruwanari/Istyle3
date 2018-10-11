@@ -50,3 +50,9 @@ Route::post('/filter',[
 Route::post('/profile/{id}',[
     'uses' => 'StylistController@viewProfile'
 ]);
+
+Route::post('/gallery/{id}',[
+    'uses' => 'StylistController@viewGallery'
+]);
+
+

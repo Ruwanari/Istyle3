@@ -166,6 +166,16 @@ public function viewProfile($id)
     return response()->json($response, 200);
 }
 
+public function viewGallery($id)
+{
+    $gallery = \App\Gallery::where('StylistId', $id)->select('ImageUrl')->get();
+    $response = [
+        'gallery'=>$gallery
+    ];
+
+    return response()->json($response, 200);
+}
+
 
                                 
 
